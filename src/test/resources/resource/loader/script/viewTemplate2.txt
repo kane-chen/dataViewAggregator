@@ -1,0 +1,3 @@
+#parse($!css_define)
+<p class="red">${view_value}</p>
+#parse($!js_define)
