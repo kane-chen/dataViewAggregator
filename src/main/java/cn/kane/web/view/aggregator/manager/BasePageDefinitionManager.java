@@ -7,7 +7,7 @@ import com.alibaba.fastjson.JSON;
 import cn.kane.web.view.aggregator.pojo.definition.PageDefinition;
 import cn.kane.web.view.aggregator.service.manager.PageDefinitionManager;
 
-public class OTSPageDefinitionManager extends AbstractOTSResourceDefinitionManager<PageDefinition>
+public class BasePageDefinitionManager extends AbstractResourceDefinitionManager<PageDefinition>
 		implements PageDefinitionManager {
 
 	@Override

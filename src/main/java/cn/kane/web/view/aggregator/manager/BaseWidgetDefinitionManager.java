@@ -7,7 +7,7 @@ import cn.kane.web.view.aggregator.service.manager.WidgetDefinitionManager;
 
 import com.alibaba.fastjson.JSON;
 
-public class OTSWidgetDefinitionManager extends AbstractOTSResourceDefinitionManager<WidgetDefinition>
+public class BaseWidgetDefinitionManager extends AbstractResourceDefinitionManager<WidgetDefinition>
 		implements WidgetDefinitionManager {
 
 	@Override

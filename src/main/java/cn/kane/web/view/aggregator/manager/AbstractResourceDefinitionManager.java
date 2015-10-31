@@ -6,7 +6,7 @@ import cn.kane.web.view.aggregator.pojo.definition.AbstractDefinition;
 import cn.kane.web.view.aggregator.pojo.definition.DefinitionKey;
 import cn.kane.web.view.aggregator.service.manager.ResourceDefinitionManager;
 
-public abstract class AbstractOTSResourceDefinitionManager<T extends AbstractDefinition>
+public abstract class AbstractResourceDefinitionManager<T extends AbstractDefinition>
 		implements ResourceDefinitionManager<T> {
 
 	private Storager storager;
@@ -58,6 +58,10 @@ public abstract class AbstractOTSResourceDefinitionManager<T extends AbstractDef
 			definition = this.parseAfterRead(definition);
 		}
 		return definitions;
+	}
+
+	public void setStorager(Storager storager) {
+		this.storager = storager;
 	}
 
 }

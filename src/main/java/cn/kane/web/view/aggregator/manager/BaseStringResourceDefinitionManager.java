@@ -3,9 +3,13 @@ package cn.kane.web.view.aggregator.manager;
 import cn.kane.web.view.aggregator.pojo.definition.StringResourceDefinition;
 import cn.kane.web.view.aggregator.service.manager.StringResourceDefinitionManager;
 
-public class OTSStringResourceDefinitionManager extends AbstractOTSResourceDefinitionManager<StringResourceDefinition>
+public class BaseStringResourceDefinitionManager extends AbstractResourceDefinitionManager<StringResourceDefinition>
 		implements StringResourceDefinitionManager {
 
+	public void init(){
+		System.out.println("1111111111111111111111111111111111");
+	}
+	
 	@Override
 	public StringResourceDefinition formatBeforeWrite(StringResourceDefinition definition) {
 		return definition;
