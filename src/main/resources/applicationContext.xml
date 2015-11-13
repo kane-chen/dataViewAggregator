@@ -13,6 +13,8 @@
 	<context:annotation-config />
 	
 	<import resource="loader/datareader-loader.xml"/>
+	<import resource="loader/widget-loader.xml"/>
+	<import resource="loader/page-loader.xml"/>
 	<import resource="spring-mvc.xml"/>
 	
 </beans>

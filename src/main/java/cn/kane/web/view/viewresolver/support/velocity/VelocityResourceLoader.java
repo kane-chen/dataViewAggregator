@@ -11,6 +11,8 @@ import org.apache.velocity.runtime.resource.loader.ResourceLoader;
 
 import cn.kane.web.view.aggregator.pojo.definition.DefinitionKey;
 import cn.kane.web.view.aggregator.pojo.definition.StringResourceDefinition;
+import cn.kane.web.view.aggregator.pojo.model.Page;
+import cn.kane.web.view.aggregator.pojo.model.Widget;
 import cn.kane.web.view.aggregator.service.manager.StringResourceDefinitionManager;
 import cn.kane.web.view.aggregator.util.DefinitionKeyUtils;
 
@@ -41,11 +43,22 @@ public class VelocityResourceLoader extends ResourceLoader {
 		if (null == key) {
 			return null;
 		}
-		StringResourceDefinition definition = this.stringResourceDefinitionManager.get(key);
-		if (null == definition || StringUtils.isBlank(definition.getContent())) {
-			return null;
+		if("page".equals(key.getType())){
+			Page page = cn.kane.web.view.viewresolver.support.velocity.ContainerBeanFactory.getInstance().getPageLoader().getResourceByKey(key) ;
+			return page.getLayout() ;
+		}else if("widget".equals(key.getType())){
+			Widget widget = ContainerBeanFactory.getInstance().getWidgetLoader().getResourceByKey(key) ;
+			StringBuilder temp = new StringBuilder();
+			temp.append(widget.getDataTemplate()).append(widget.getViewTemplate()) ;
+			return temp.toString() ;
+		}else if("js".equals(key.getType()) || "css".equals(key.getType()) 
+				|| "dataTemplate".equals(key.getType()) 
+				|| "viewTemplate".equals(key.getType())){
+			StringResourceDefinition definition = this.stringResourceDefinitionManager.get(key);
+			return definition.getContent();
+		}else{
+			throw new UnsupportedOperationException("not suport source:"+sourceName);
 		}
-		return definition.getContent();
 	}
 
 	@Override

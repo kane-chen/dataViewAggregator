@@ -7,7 +7,6 @@ public class BaseStringResourceDefinitionManager extends AbstractResourceDefinit
 		implements StringResourceDefinitionManager {
 
 	public void init(){
-		System.out.println("1111111111111111111111111111111111");
 	}
 	
 	@Override

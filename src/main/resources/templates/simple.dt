@@ -1,0 +1,2 @@
+#set($printValue='printValue in dataTemplate')
+#set($printValue=$dataReaderTool.getData('dataReadService#-#simple#-#1',$params))

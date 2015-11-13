@@ -16,6 +16,7 @@
 	</bean>
 
 	<!-- test-datas -->
+	<bean id="simpleDataReadService" class="cn.kane.web.view.aggregator.service.inner.SimpleDataReadServiceImpl"/>
 	<bean id="testKey" class="cn.kane.web.view.aggregator.pojo.definition.DefinitionKey">
 		<property name="type" value="viewTemplate"/>
 		<property name="name" value="sayhi"/>
@@ -26,7 +27,7 @@
 		<property name="content" value="hello,$!user"/>
 	</bean>
 	<!-- storager -->
-	<bean id="storager" class="cn.kane.web.view.aggregator.manager.StoragerInLocalMem">
+	<bean id="storager" class="cn.kane.web.view.aggregator.manager.StoragerInLocalMem" init-method="init">
 		<property name="store">
 			<map>
 				<entry key-ref="testKey" value-ref="testRes"/>
