@@ -14,11 +14,15 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 
 
+
+
 import cn.kane.web.view.aggregator.pojo.definition.DefinitionKey;
 import cn.kane.web.view.aggregator.pojo.definition.StringResourceDefinition;
 import cn.kane.web.view.aggregator.pojo.model.DataReader;
+import cn.kane.web.view.aggregator.service.inner.DataReadService;
 import cn.kane.web.view.aggregator.service.loader.DataReaderLoader;
 import cn.kane.web.view.aggregator.service.manager.StringResourceDefinitionManager;
+import cn.kane.web.view.aggregator.util.groovy.GroovyBeanFcatory;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
@@ -26,6 +30,7 @@ public class GroovyDataReaderLoaderTest extends TestCase {
 
     private StringResourceDefinitionManager stringResourceManager ;
     private DataReaderLoader dataReaderLoader ;
+    private GroovyBeanFcatory groovyBeanFactory ;
     
     private static final String dataReadServiceFile2 = "/resource/loader/script/DataReadServiceCodeNew.txt";
     
@@ -36,6 +41,7 @@ public class GroovyDataReaderLoaderTest extends TestCase {
         ApplicationContext appContext = new ClassPathXmlApplicationContext("/resource/loader/datareader-loader-test.xml");
         stringResourceManager = (StringResourceDefinitionManager)appContext.getBean("stringResourceDefinitionManager");
         dataReaderLoader = (DataReaderLoader) appContext.getBean("dataReaderLoader");
+        groovyBeanFactory = (GroovyBeanFcatory)appContext.getBean("groovyBeanFactory");
         //key
         key = new DefinitionKey() ;
         key.setType("dataReadService");
@@ -73,5 +79,11 @@ public class GroovyDataReaderLoaderTest extends TestCase {
         in.read(bytes);
         result = new String(bytes);
         return result;
+    }
+    
+    public void testGroovyClassLoader() throws IOException{
+    	String content = this.getCodeInFile("/templates/scripts/CommonDataReader.dat") ;
+    	DataReadService dataService = groovyBeanFactory.getBeanIntance("AAA", content, DataReadService.class) ;
+    	System.out.println(dataService.getData(null));
     }
 }

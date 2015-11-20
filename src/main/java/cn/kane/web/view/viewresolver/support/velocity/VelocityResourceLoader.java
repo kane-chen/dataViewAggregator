@@ -21,7 +21,6 @@ import com.google.common.hash.Hashing;
 
 public class VelocityResourceLoader extends ResourceLoader {
 
-	public static final String RESOURCE_NAME_SPLITOR = "#-#";
 	private StringResourceDefinitionManager stringResourceDefinitionManager;
 	
 	@Override

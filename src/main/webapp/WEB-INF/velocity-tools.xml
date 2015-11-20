@@ -10,4 +10,9 @@
 		<scope>application</scope>
 		<class>cn.kane.web.view.viewresolver.support.velocity.DataReaderTool</class>
 	</tool>
+	<tool>
+		<key>defKeyTool</key>
+		<scope>application</scope>
+		<class>cn.kane.web.view.aggregator.util.DefinitionKeyUtils</class>
+	</tool>
 </toolbox>

@@ -49,4 +49,18 @@ public class HelloController {
 		view.setViewName(DefinitionKeyUtils.format(key));
 		return view ;
 	}
+	
+	@RequestMapping(value="page",method=RequestMethod.GET)
+	public ModelAndView page(@RequestParam("userId")String userId){
+		Map<String,Object> params = new HashMap<String, Object>(1) ;
+		params.put("userId", userId) ;
+		ModelAndView view = new ModelAndView() ;
+		view.addObject("params", params) ;
+		DefinitionKey key = new DefinitionKey() ;
+		key.setType("page");
+		key.setName("test");
+		key.setVersion("1");
+		view.setViewName(DefinitionKeyUtils.format(key));
+		return view ;
+	}
 }

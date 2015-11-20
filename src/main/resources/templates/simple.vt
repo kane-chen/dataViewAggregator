@@ -1,1 +1,19 @@
-<p class="red">${printValue}</p>
+#include($defKeyTool.formatStr('css','simple','1'))
+
+<p class="strong">
+	${printValue}
+	<br>
+	${futureRespData}
+	<br>
+	#sayhi('aaaa')
+</p>
+
+##MACRO
+#macro( inner_macro $name )
+  welcome,$name
+#end
+<p class="strong">
+	#inner_macro('kane')
+</p>
+
+##parse($defKeyTool.formatStr('js','simple','1'))

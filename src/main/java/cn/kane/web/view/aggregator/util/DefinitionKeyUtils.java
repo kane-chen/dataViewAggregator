@@ -6,7 +6,7 @@ import cn.kane.web.view.aggregator.pojo.definition.DefinitionKey;
 
 public class DefinitionKeyUtils {
 
-    private static final String SPLITOR = "#-#" ;
+    private static final String SPLITOR = "O_O" ;
     
     public static String format(DefinitionKey key){
         if(null == key){
@@ -15,6 +15,16 @@ public class DefinitionKeyUtils {
         return new StringBuilder().append(key.getType()).append(SPLITOR)
                 .append(key.getName()).append(SPLITOR)
                 .append(key.getVersion())
+                .toString();
+    }
+    
+    public static String formatStr(String type,String name,String version){
+    	if(StringUtils.isBlank(type) || StringUtils.isBlank(name) || StringUtils.isBlank(version)){
+    		return null ;
+    	}
+    	return new StringBuilder().append(type).append(SPLITOR)
+                .append(name).append(SPLITOR)
+                .append(version)
                 .toString();
     }
     
@@ -32,4 +42,5 @@ public class DefinitionKeyUtils {
         key.setVersion(strArr[2]);
         return key ;
     }
+    
 }

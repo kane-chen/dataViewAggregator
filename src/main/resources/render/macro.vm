@@ -1,0 +1,3 @@
+#macro( sayhi $name )
+  hello,$name
+#end

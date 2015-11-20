@@ -16,5 +16,6 @@
 	<import resource="loader/widget-loader.xml"/>
 	<import resource="loader/page-loader.xml"/>
 	<import resource="spring-mvc.xml"/>
+	<import resource="dubbo-server.xml"/>
 	
 </beans>

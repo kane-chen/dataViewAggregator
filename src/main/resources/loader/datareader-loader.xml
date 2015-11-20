@@ -7,10 +7,12 @@
 	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd" default-autowire="byName">
 	<!-- groovy bean factory(classLoader&instanceManager) -->
 	<bean id="contextBeanAnnoHandler" class="cn.kane.web.view.aggregator.util.groovy.annotation.ContextBeanAnnoHandler"/>
+	<bean id="dubboConsumerAnnoHandler" class="cn.kane.web.view.aggregator.util.groovy.annotation.DubboConsumerAnnoHandler" init-method="init"/>
 	<bean id="groovyBeanFactory" class="cn.kane.web.view.aggregator.util.groovy.GroovyBeanFcatory">
 		<property name="annoHandlers">
 			<list>
 				<ref bean="contextBeanAnnoHandler"/>
+				<ref bean="dubboConsumerAnnoHandler"/>
 			</list>
 		</property>
 	</bean>
