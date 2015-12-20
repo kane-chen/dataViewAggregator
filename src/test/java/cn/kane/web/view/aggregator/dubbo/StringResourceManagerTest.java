@@ -12,9 +12,9 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import org.junit.Assert;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -35,7 +35,6 @@ public class StringResourceManagerTest extends TestCase {
 	private DefinitionKey key;
 	private VelocityExtConfigService velocityExtConfigService;
 
-	@SuppressWarnings("resource")
 	public void setUp() throws IOException {
 		ApplicationContext appContext = new ClassPathXmlApplicationContext(
 				"/resource/dubbo/dubbo-client-test.xml");

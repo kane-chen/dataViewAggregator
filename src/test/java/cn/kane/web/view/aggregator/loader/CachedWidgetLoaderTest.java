@@ -3,17 +3,9 @@ package cn.kane.web.view.aggregator.loader;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.junit.Assert;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-
-
-
-
-
-
-
-
 
 import cn.kane.web.view.aggregator.pojo.definition.DefinitionKey;
 import cn.kane.web.view.aggregator.pojo.definition.StringResourceDefinition;
@@ -22,7 +14,6 @@ import cn.kane.web.view.aggregator.pojo.model.Widget;
 import cn.kane.web.view.aggregator.service.loader.WidgetLoader;
 import cn.kane.web.view.aggregator.service.manager.StringResourceDefinitionManager;
 import cn.kane.web.view.aggregator.service.manager.WidgetDefinitionManager;
-import junit.framework.Assert;
 import junit.framework.TestCase;
 
 public class CachedWidgetLoaderTest extends TestCase {
@@ -33,7 +24,6 @@ public class CachedWidgetLoaderTest extends TestCase {
     
     private DefinitionKey key ;
 
-    @SuppressWarnings("resource")
     public void setUp() throws IOException{
         ApplicationContext appContext = new ClassPathXmlApplicationContext("/resource/loader/widget-loader-test.xml");
         stringResourceManager = (StringResourceDefinitionManager)appContext.getBean("stringResourceDefinitionManager");

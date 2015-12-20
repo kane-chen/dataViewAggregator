@@ -1,0 +1,5 @@
+1.run on eclipse:
+  mvn jetty:run -Djetty.port=8080
+2.dubbo.xsd not-found-error
+   windows->preferrence->xml->xmlcatalog -> add ->catalog entry  ->file system(dubbo.xsd's path)
+   then choose xml -> validate(right-mouse-key)

@@ -5,9 +5,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import org.junit.Assert;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -29,7 +29,6 @@ public class CachedPageLoaderTest extends TestCase {
     private StringResourceDefinitionManager stringResourceManager ;
     private DefinitionKey key ;
     
-    @SuppressWarnings("resource")
     public void setUp() throws IOException{
         ApplicationContext appContext = new ClassPathXmlApplicationContext("/resource/loader/page-loader-test.xml");
         stringResourceManager = (StringResourceDefinitionManager)appContext.getBean("stringResourceDefinitionManager");

@@ -22,7 +22,7 @@ public class ViewRenderTest extends TestCase {
     private ViewRender<Widget> widgetViewRender ;
     private ViewRender<Page> pageViewRender ;
 
-    @SuppressWarnings({ "resource", "unchecked" })
+    @SuppressWarnings({"unchecked" })
     public void setUp() throws IOException{
         //init
         ApplicationContext appContext = new ClassPathXmlApplicationContext("classpath:/resource/render/view-render-test.xml");

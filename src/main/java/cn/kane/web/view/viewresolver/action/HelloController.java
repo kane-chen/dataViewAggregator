@@ -16,7 +16,7 @@ import cn.kane.web.view.aggregator.util.DefinitionKeyUtils;
 @RequestMapping("/hello")
 public class HelloController {
 
-	@RequestMapping(value="sayhi",method=RequestMethod.GET)
+	@RequestMapping(value="sayhi",method={RequestMethod.GET,RequestMethod.POST})
 	public ModelAndView hello(){
 		ModelAndView view = new ModelAndView() ;
 		view.addObject("user", "kane") ;
@@ -24,7 +24,7 @@ public class HelloController {
 		return view ;
 	}
 	
-	@RequestMapping(value="dynamic",method=RequestMethod.GET)
+	@RequestMapping(value="dynamic",method={RequestMethod.GET,RequestMethod.POST})
 	public ModelAndView dynamic(){
 		ModelAndView view = new ModelAndView() ;
 		view.addObject("user", "kane") ;

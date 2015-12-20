@@ -38,7 +38,7 @@
 	</bean>
 
 	<!-- definition-manager -->
-	<bean id="stringResourceDefinitionManager" class="cn.kane.web.view.aggregator.manager.BaseStringResourceDefinitionManager" init-method="init"/>
+	<bean id="stringResourceDefinitionManager" class="cn.kane.web.view.aggregator.manager.BaseStringResourceDefinitionManager"/>
 	<!-- builder -->
 	<bean id="dataReaderBuilder" class="cn.kane.web.view.aggregator.loader.build.DataReaderBuilder"/>
 	<!-- cacher -->

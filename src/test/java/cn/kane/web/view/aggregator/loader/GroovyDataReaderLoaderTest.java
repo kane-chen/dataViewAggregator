@@ -3,18 +3,13 @@ package cn.kane.web.view.aggregator.loader;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-
-
-
-
-
-
-
-
-
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import cn.kane.web.view.aggregator.pojo.definition.DefinitionKey;
 import cn.kane.web.view.aggregator.pojo.definition.StringResourceDefinition;
@@ -23,25 +18,24 @@ import cn.kane.web.view.aggregator.service.inner.DataReadService;
 import cn.kane.web.view.aggregator.service.loader.DataReaderLoader;
 import cn.kane.web.view.aggregator.service.manager.StringResourceDefinitionManager;
 import cn.kane.web.view.aggregator.util.groovy.GroovyBeanFcatory;
-import junit.framework.Assert;
-import junit.framework.TestCase;
 
-public class GroovyDataReaderLoaderTest extends TestCase {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={"classpath:/resource/loader/datareader-loader-test.xml"})
 
+public class GroovyDataReaderLoaderTest{
+	@Autowired
     private StringResourceDefinitionManager stringResourceManager ;
-    private DataReaderLoader dataReaderLoader ;
+    @Autowired
+	private DataReaderLoader dataReaderLoader ;
+    @Autowired
     private GroovyBeanFcatory groovyBeanFactory ;
     
     private static final String dataReadServiceFile2 = "/resource/loader/script/DataReadServiceCodeNew.txt";
     
     private DefinitionKey key ;
-    @SuppressWarnings("resource")
+    
+    @Before
     public void setUp() throws IOException{
-        //init
-        ApplicationContext appContext = new ClassPathXmlApplicationContext("/resource/loader/datareader-loader-test.xml");
-        stringResourceManager = (StringResourceDefinitionManager)appContext.getBean("stringResourceDefinitionManager");
-        dataReaderLoader = (DataReaderLoader) appContext.getBean("dataReaderLoader");
-        groovyBeanFactory = (GroovyBeanFcatory)appContext.getBean("groovyBeanFactory");
         //key
         key = new DefinitionKey() ;
         key.setType("dataReadService");
@@ -49,11 +43,13 @@ public class GroovyDataReaderLoaderTest extends TestCase {
         key.setVersion("1");
     }
     
+    @Test
     public void testLoad(){
         DataReader dataReader = dataReaderLoader.getResourceByKey(key) ;
         Assert.assertTrue("HELLO-WORLD".equals(dataReader.getDataReadService().getData(null))) ;
     }
     
+    @Test
     public void testUpdated() throws IOException{
         DataReader dataReader = dataReaderLoader.getResourceByKey(key) ;
         //use cache

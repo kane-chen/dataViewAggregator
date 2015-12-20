@@ -50,7 +50,7 @@ public class VelocityResourceLoader extends ResourceLoader {
 			StringBuilder temp = new StringBuilder();
 			temp.append(widget.getDataTemplate()).append(widget.getViewTemplate()) ;
 			return temp.toString() ;
-		}else if("js".equals(key.getType()) || "css".equals(key.getType()) 
+		}else if("js".equals(key.getType()) || "css".equals(key.getType())  || "layout".equals(key.getType())
 				|| "dataTemplate".equals(key.getType()) 
 				|| "viewTemplate".equals(key.getType())){
 			StringResourceDefinition definition = this.stringResourceDefinitionManager.get(key);
