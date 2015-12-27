@@ -14,6 +14,8 @@ public interface RequirementManageService {
 	Requirement get(String id) ;
 	
 	void remove(String id) ;
+
+	void compareAndSetStatus(String id,String status,String newStatus) ;
 	
 	List<Requirement> list(String name,Date fromDate,Date toDate) ;
 }

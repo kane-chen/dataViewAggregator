@@ -39,6 +39,11 @@ public abstract class AbstractResourceDefinitionManager<T extends AbstractDefini
 		return storager.update(definition);
 	}
 
+	@Override
+	public boolean remove(DefinitionKey key) {
+		return storager.remove(key);
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public T get(DefinitionKey key) {

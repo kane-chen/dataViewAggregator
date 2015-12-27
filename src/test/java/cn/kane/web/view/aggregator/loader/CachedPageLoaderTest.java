@@ -8,8 +8,12 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.junit.Assert;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import cn.kane.web.view.aggregator.pojo.definition.DefinitionKey;
 import cn.kane.web.view.aggregator.pojo.definition.PageDefinition;
@@ -21,23 +25,28 @@ import cn.kane.web.view.aggregator.service.manager.PageDefinitionManager;
 import cn.kane.web.view.aggregator.service.manager.StringResourceDefinitionManager;
 import cn.kane.web.view.aggregator.service.manager.WidgetDefinitionManager;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={
+		"classpath:/resource/loader/page-loader-test.xml"
+})
 public class CachedPageLoaderTest extends TestCase {
 
+	@Autowired
     private PageLoader pageLoader ;
-    private PageDefinitionManager pageDefinitionManager ;
+    @Autowired
+	private PageDefinitionManager pageDefinitionManager ;
+    @Autowired
     private WidgetDefinitionManager widgetDefinitionManager ;
+    @Autowired
     private StringResourceDefinitionManager stringResourceManager ;
     private DefinitionKey key ;
     
+    @Before
     public void setUp() throws IOException{
-        ApplicationContext appContext = new ClassPathXmlApplicationContext("/resource/loader/page-loader-test.xml");
-        stringResourceManager = (StringResourceDefinitionManager)appContext.getBean("stringResourceDefinitionManager");
-        widgetDefinitionManager = (WidgetDefinitionManager)appContext.getBean("widgetDefinitionManager") ;
-        pageDefinitionManager = (PageDefinitionManager) appContext.getBean("pageDefinitionManager") ;
-        pageLoader = (PageLoader) appContext.getBean("pageLoader");
         key = this.buildKey("page", "pageName", "1") ;
     }
     
+    @Test
     public void testLoad() throws IOException{
         Page page = pageLoader.getResourceByKey(key) ;
         Assert.assertEquals(this.getCodeInFile(MockStringResourceDefinitionManager.layoutFile), page.getLayout());
@@ -45,6 +54,7 @@ public class CachedPageLoaderTest extends TestCase {
         Assert.assertEquals(this.getCodeInFile(MockStringResourceDefinitionManager.jsFile), page.getJs());
     }
     
+    @Test
     public void testUpdated() throws IOException{
         Page page = pageLoader.getResourceByKey(key) ;
         Page page1 = pageLoader.getResourceByKey(key) ;

@@ -18,17 +18,16 @@ import cn.kane.web.view.aggregator.pojo.definition.StringResourceDefinition;
 import cn.kane.web.view.aggregator.service.manager.ResourceDefinitionManager;
 import cn.kane.web.view.integrate.pojo.Requirement;
 import cn.kane.web.view.integrate.service.ChangesManageService;
-import cn.kane.web.view.integrate.service.ChangesPublishService;
-import cn.kane.web.view.integrate.service.ChangesPushService;
 import cn.kane.web.view.integrate.service.RequirementJoinService;
 import cn.kane.web.view.integrate.service.RequirementManageService;
+import cn.kane.web.view.integrate.state.IntegrateStatus;
+import cn.kane.web.view.integrate.state.State;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={
 		"classpath:/resource/integrate/publish-service-test.xml"
 		,"classpath:/resource/integrate/integrate-service-aop-test.xml"
 		,"classpath:/resource/integrate/definition-manager-test.xml"
-		,"classpath:/resource/integrate/definition-manager-ol-test.xml"
 })
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ChangesPublishServiceTest {
@@ -38,21 +37,11 @@ public class ChangesPublishServiceTest {
 	@Autowired
 	private RequirementJoinService requirementJoinService ;
 	@Autowired
+	private ChangesManageService changesManageService ;
+	@Autowired
 	private ResourceDefinitionManager<AbstractDefinition> resourceDefinitionManagerFacade ;
 	@Autowired
-	private ChangesManageService changesManageService ;
-	/* publish */
-	@Autowired
-	private ChangesPushService changesPushService ; 
-	@Autowired
-	private ChangesPublishService changesPublishService ;
-	/* ol-mamanger */
-	@Autowired
-	private RequirementManageService olRequirementManageService ;
-	@Autowired
-	private ChangesManageService olChangesManageService ;
-	@Autowired
-	private ResourceDefinitionManager<AbstractDefinition> olResourceDefinitionManagerFacade ;
+	private State stateFacade ;
 	
 	private static String requirementId;
 	private static final String operator = "kane";
@@ -99,34 +88,53 @@ public class ChangesPublishServiceTest {
 	}
 	
 	@Test
-	public void test003_push(){
-		changesPushService.push(requirementId) ;
-		//requirement
-		Requirement olReq = olRequirementManageService.get(requirementId) ;
-		Assert.assertEquals("pushed", olReq.getStatus()) ;
-		//changes
-		List<DefinitionKey> olKeys = olChangesManageService.list(requirementId) ;
-		Assert.assertTrue(olKeys.contains(key1));
-		Assert.assertTrue(olKeys.contains(key2));
-		//synchronize
-		AbstractDefinition def1 = olResourceDefinitionManagerFacade.get(key1) ;
-		Assert.assertNotNull(def1);
-		AbstractDefinition def2 = olResourceDefinitionManagerFacade.get(key2) ;
-		Assert.assertNotNull(def2);
+	public void test003_commited(){
+		//commit
+		stateFacade.action(requirementId) ;
+		//check
+		Requirement commitedReq = requirementManageService.get(requirementId) ;
+		Assert.assertEquals(IntegrateStatus.COMMITED.status(), commitedReq.getStatus()) ;
 	}
 	
 	@Test
 	public void test004_publish(){
-		changesPublishService.publish(requirementId) ;
-		//requirement
-		Requirement olReq = olRequirementManageService.get(requirementId) ;
-		Assert.assertEquals("published", olReq.getStatus()) ;
+		//publish
+		stateFacade.action(requirementId) ;
+		Requirement publishedReq = requirementManageService.get(requirementId) ;
+		Assert.assertEquals(IntegrateStatus.PUBLISHED.status(), publishedReq.getStatus()) ;
 		//trunk
-		key1.setVersion("trunk") ;
-		AbstractDefinition def1 = olResourceDefinitionManagerFacade.get(key1) ;
+		DefinitionKey trunkKey1 = this.clone(key1) ;
+		trunkKey1.setVersion(ChangesManageService.TRUNK_VERSION) ;
+		AbstractDefinition def1 = resourceDefinitionManagerFacade.get(trunkKey1) ;
 		Assert.assertNotNull(def1);
-		key2.setVersion("trunk") ;
-		AbstractDefinition def2 = olResourceDefinitionManagerFacade.get(key2) ;
+		DefinitionKey trunkKey2 = this.clone(key1) ;
+		trunkKey2.setVersion(ChangesManageService.TRUNK_VERSION) ;
+		AbstractDefinition def2 = resourceDefinitionManagerFacade.get(key2) ;
 		Assert.assertNotNull(def2);
+	}
+	
+	@Test
+	public void test005_rollback(){
+		//rollback
+		stateFacade.rollback(requirementId) ;
+		Requirement rollbackedReq = requirementManageService.get(requirementId) ;
+		Assert.assertEquals(IntegrateStatus.ROLLBACKED.status(), rollbackedReq.getStatus()) ;
+		DefinitionKey trunkKey1 = this.clone(key1) ;
+		trunkKey1.setVersion(ChangesManageService.TRUNK_VERSION) ;
+		AbstractDefinition def1 = resourceDefinitionManagerFacade.get(trunkKey1) ;
+		Assert.assertNull(def1);
+	}
+	
+	@Test
+	public void test006_disabled(){
+		
+	}
+	
+	private DefinitionKey clone(DefinitionKey key){
+		DefinitionKey clone = new DefinitionKey() ;
+		clone.setType(key.getType());
+		clone.setName(key.getName());
+		clone.setVersion(key.getVersion());
+		return clone ;
 	}
 }

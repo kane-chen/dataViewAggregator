@@ -13,9 +13,20 @@
 	<bean id="pageDefinitionManager" class="cn.kane.web.view.aggregator.manager.BasePageDefinitionManager"/>
 	<!-- facade -->
 	<bean id="resourceDefinitionManagerFacade" class="cn.kane.web.view.aggregator.manager.ResourceDefinitionManagerFacade">
-		<property name="stringResourceDefinitionManager" ref="stringResourceDefinitionManager"/>
-		<property name="widgetDefinitionManager" ref="widgetDefinitionManager"/>
-		<property name="pageDefinitionManager" ref="pageDefinitionManager"/>
+		<property name="managerMapping">
+			<map>
+				<entry key="string" value-ref="stringResourceDefinitionManager"/>
+				<entry key="css" value-ref="stringResourceDefinitionManager"/>
+				<entry key="js" value-ref="stringResourceDefinitionManager"/>
+				<entry key="dataTemplate" value-ref="stringResourceDefinitionManager"/>
+				<entry key="viewTemplate" value-ref="stringResourceDefinitionManager"/>
+				<entry key="layout" value-ref="stringResourceDefinitionManager"/>
+				<entry key="sys" value-ref="stringResourceDefinitionManager"/>
+				<entry key="widget" value-ref="widgetDefinitionManager"/>
+				<entry key="page" value-ref="pageDefinitionManager"/>
+				
+			</map>
+		</property>
 	</bean>	
 	
 	

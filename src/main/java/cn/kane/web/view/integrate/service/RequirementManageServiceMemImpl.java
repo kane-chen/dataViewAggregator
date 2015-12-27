@@ -20,7 +20,7 @@ public class RequirementManageServiceMemImpl implements RequirementManageService
 		Date now = new Date() ;
 		if(null == requirement.getId()){
 			requirement.setId(String.valueOf(counter.incrementAndGet())) ;
-			requirement.setStatus("new") ;
+			requirement.setStatus("NEW") ;
 			requirement.setCtime(now) ;
 		}
 		requirement.setMtime(now) ;
@@ -49,8 +49,25 @@ public class RequirementManageServiceMemImpl implements RequirementManageService
 		store.remove(id) ;
 	}
 	
+
+	/**
+	 * non-ThreadSafe
+	 */
 	@Override
-	public List<Requirement> list(String name, Date fromDate, Date toDate) {
+	public void compareAndSetStatus(String id,String status, String newStatus) {
+		Requirement requirement = store.get(id) ;
+		if(null == requirement){
+			throw new IllegalArgumentException(String.format("Requirement[id=%s] not found ",id));
+		}
+		if(null!=status && !status.equalsIgnoreCase(requirement.getStatus())){
+			throw new IllegalArgumentException(String.format("Requirement[id=%s]'s status is",id,requirement.getStatus()));
+		}
+		requirement.setStatus(newStatus) ;
+		store.put(id, requirement) ;
+	}
+
+	@Override
+	public List<Requirement> list(String name, Date fromDate,Date toDate) {
 		throw new UnsupportedOperationException("not support list now");
 	}
 

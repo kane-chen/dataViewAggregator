@@ -11,6 +11,8 @@ public interface Storager {
     
     boolean update(AbstractDefinition res) ;
     
+    boolean remove(DefinitionKey key) ;
+    
     AbstractDefinition get(DefinitionKey key) ;
     
     List<AbstractDefinition> list(DefinitionKey fromKey,DefinitionKey toKey) ;

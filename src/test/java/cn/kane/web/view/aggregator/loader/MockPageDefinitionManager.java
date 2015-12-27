@@ -60,5 +60,11 @@ public class MockPageDefinitionManager implements PageDefinitionManager {
     public List<PageDefinition> list(DefinitionKey fromKey, DefinitionKey toKey) {
         return null;
     }
+
+	@Override
+	public boolean remove(DefinitionKey key) {
+		mapping.remove(key);
+		return true;
+	}
     
 }

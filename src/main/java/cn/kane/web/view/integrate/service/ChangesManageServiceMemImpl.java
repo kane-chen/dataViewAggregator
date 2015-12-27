@@ -4,13 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import cn.kane.web.view.aggregator.pojo.definition.AbstractDefinition;
 import cn.kane.web.view.aggregator.pojo.definition.DefinitionKey;
+import cn.kane.web.view.aggregator.service.manager.ResourceDefinitionManager;
 import cn.kane.web.view.integrate.pojo.Changes;
 
 public class ChangesManageServiceMemImpl implements ChangesManageService {
 
 	private ConcurrentHashMap<String,Changes> store = new ConcurrentHashMap<String, Changes>() ;
 	private ConcurrentHashMap<String,Changes> backupStore = new ConcurrentHashMap<String, Changes>() ;
+	@Autowired
+	private ResourceDefinitionManager<AbstractDefinition> resourceDefinitionManagerFacade ;
 	
 	@Override
 	public void add(String requirementId, DefinitionKey key) {
@@ -38,33 +44,58 @@ public class ChangesManageServiceMemImpl implements ChangesManageService {
 	}
 
 	@Override
-	public void addAll(String requirementId, List<DefinitionKey> keys) {
-		Changes stored = store.get(requirementId) ;
-		if(null != stored){
-			throw new IllegalArgumentException(String.format("Requirement[%s] existed", requirementId)) ;
-		}
-		stored = new Changes() ;
-		stored.setId(requirementId) ;
-		stored.getChanges().addAll(keys) ;
-		store.put(requirementId, stored) ;
-	}
-
-	@Override
-	public void addAllBackup(String requirementId, List<DefinitionKey> keys) {
-		if(null == requirementId || null == keys || keys.isEmpty()){
+	public void backup(String requirementId) {
+		//changed-keys
+		List<DefinitionKey> changedKeys = this.list(requirementId) ;
+		if(null == requirementId || null == changedKeys || changedKeys.isEmpty()){
 			//WARN
 			return ;
 		}
-		Changes stored = backupStore.get(requirementId) ;
-		if(null != stored){
-			throw new IllegalArgumentException(String.format("Requirement[%s] existed", requirementId)) ;
+		//backup-keys
+		List<DefinitionKey> backupKeys = this.getBackupOfChangedKeys(changedKeys) ;
+		if(null == backupKeys || backupKeys.isEmpty()){
+			//nothing need to backup
+			return ;
 		}
-		stored = new Changes() ;
-		stored.setId(requirementId) ;
-		stored.getChanges().addAll(keys) ;
-		backupStore.put(requirementId, stored) ;
+		//ReEntrant,no check duplicate-backup
+//		Changes stored = backupStore.get(requirementId) ;
+//		if(null != stored){
+//			throw new IllegalArgumentException(String.format("Requirement[%s] existed", requirementId)) ;
+//		}
+		//backup
+		Changes store = new Changes() ;
+		store.setId(requirementId) ;
+		store.getChanges().addAll(backupKeys) ;
+		backupStore.put(requirementId, store) ;
+	}
+	
+	private List<DefinitionKey> getBackupOfChangedKeys(List<DefinitionKey> changedKeys){
+		List<DefinitionKey> backupKeys = new ArrayList<DefinitionKey>(changedKeys.size()) ;
+		for(DefinitionKey key : changedKeys){
+			DefinitionKey tmpKey = this.clone(key) ;
+			tmpKey.setVersion(TRUNK_VERSION) ;
+			AbstractDefinition prevDef = resourceDefinitionManagerFacade.get(tmpKey) ;
+			if(null!=prevDef){
+				tmpKey.setVersion(prevDef.getApplyVersion()) ;
+			}else{
+				tmpKey.setVersion(REMOVED_VERSION);
+			}
+			backupKeys.add(tmpKey) ;
+		}
+		return backupKeys ;
 	}
 
+	private DefinitionKey clone(DefinitionKey key){
+		if(key == null){
+			return null ;
+		}
+		DefinitionKey clone = new DefinitionKey() ;
+		clone.setType(key.getType());
+		clone.setName(key.getName());
+		clone.setVersion(key.getVersion());
+		return clone ;
+	}
+	
 	@Override
 	public List<DefinitionKey> listBackup(String requirementId) {
 		Changes stored = backupStore.get(requirementId) ;
@@ -74,4 +105,52 @@ public class ChangesManageServiceMemImpl implements ChangesManageService {
 		return new ArrayList<DefinitionKey>(stored.getChanges()) ;
 	}
 
+	@Override
+	public void writeTrunk(List<DefinitionKey> keys) {
+		//TODO non-transaction
+		this.removeTrunk(keys);
+		List<AbstractDefinition> definitions = this.getDefinitions(keys) ;
+		this.writeToTrunk(definitions);
+	}
+
+	private void removeTrunk(List<DefinitionKey> keys){
+		for(DefinitionKey key : keys){
+			//add >> RollBack >> remove
+			if(REMOVED_VERSION.equalsIgnoreCase(key.getVersion())){
+				DefinitionKey newKey = this.clone(key) ;
+				newKey.setVersion(TRUNK_VERSION) ;
+				resourceDefinitionManagerFacade.remove(newKey);
+			}
+		}
+	}
+	
+	private void writeToTrunk(List<AbstractDefinition> defs){
+		for(AbstractDefinition def : defs){
+			//apply-version
+			String applyVersion = def.getKey().getVersion() ;
+			//key.clone
+			DefinitionKey newKey = this.clone(def.getKey()) ;
+			newKey.setVersion(TRUNK_VERSION) ;
+			//switch trunk
+			def.setApplyVersion(applyVersion);
+			def.setKey(newKey);
+			//write trunk
+			if(null!=resourceDefinitionManagerFacade.get(newKey)){
+				resourceDefinitionManagerFacade.edit(def) ;
+			}else{
+				resourceDefinitionManagerFacade.add(def) ;
+			}
+		}
+	}
+	
+	private List<AbstractDefinition> getDefinitions(List<DefinitionKey> keys){
+		List<AbstractDefinition> defs = new ArrayList<AbstractDefinition>(keys.size());
+		for(DefinitionKey key : keys){
+			AbstractDefinition def = resourceDefinitionManagerFacade.get(key) ;
+			if(null != def){
+				defs.add(def) ;
+			}
+		}
+		return defs ;
+	}
 }

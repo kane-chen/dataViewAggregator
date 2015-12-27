@@ -15,7 +15,9 @@ import cn.kane.web.view.aggregator.pojo.definition.DefinitionKey;
 import cn.kane.web.view.integrate.service.ChangesManageService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"classpath:/resource/integrate/integrate-service-test.xml"})
+@ContextConfiguration(locations={"classpath:/resource/integrate/integrate-service-test.xml"
+		,"classpath:/resource/integrate/definition-manager-test.xml"
+})
 public class ChangesManageServiceTest {
 
 	@Autowired

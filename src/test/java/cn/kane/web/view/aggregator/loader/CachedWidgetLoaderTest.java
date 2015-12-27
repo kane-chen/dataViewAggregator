@@ -4,8 +4,12 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.junit.Assert;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import cn.kane.web.view.aggregator.pojo.definition.DefinitionKey;
 import cn.kane.web.view.aggregator.pojo.definition.StringResourceDefinition;
@@ -16,28 +20,33 @@ import cn.kane.web.view.aggregator.service.manager.StringResourceDefinitionManag
 import cn.kane.web.view.aggregator.service.manager.WidgetDefinitionManager;
 import junit.framework.TestCase;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={
+		"classpath:/resource/loader/widget-loader-test.xml"
+})
 public class CachedWidgetLoaderTest extends TestCase {
-    
+    @Autowired
     private WidgetLoader widgetLoader ;
+    @Autowired
     private WidgetDefinitionManager widgetDefinitionManager ;
+    @Autowired
     private StringResourceDefinitionManager stringResourceManager ;
     
     private DefinitionKey key ;
 
+    @Before
     public void setUp() throws IOException{
-        ApplicationContext appContext = new ClassPathXmlApplicationContext("/resource/loader/widget-loader-test.xml");
-        stringResourceManager = (StringResourceDefinitionManager)appContext.getBean("stringResourceDefinitionManager");
-        widgetDefinitionManager = (WidgetDefinitionManager)appContext.getBean("widgetDefinitionManager") ;
-        widgetLoader = (WidgetLoader) appContext.getBean("widgetLoader");
         key = this.buildKey("widget", "widgetName", "1") ;
     }
     
+    @Test
     public void testLoad() throws IOException{
         Widget widget = widgetLoader.getResourceByKey(key) ;
         String dataTemplateContent = this.getCodeInFile(MockStringResourceDefinitionManager.dataTemplateFile) ;
         Assert.assertEquals(dataTemplateContent, widget.getDataTemplate());
     }
     
+    @Test
     public void testUpdated() throws IOException{
         Widget widget = widgetLoader.getResourceByKey(key) ;
         Widget widget1 = widgetLoader.getResourceByKey(key) ;

@@ -82,4 +82,10 @@ public class MockStringResourceDefinitionManager implements StringResourceDefini
     public List<StringResourceDefinition> list(DefinitionKey fromKey, DefinitionKey toKey) {
         return null;
     }
+    
+    @Override
+	public boolean remove(DefinitionKey key) {
+		templateMapping.remove(key);
+		return true;
+	}
 }

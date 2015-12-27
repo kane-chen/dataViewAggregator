@@ -60,4 +60,10 @@ public class MockWidgetDefinitionManager implements WidgetDefinitionManager {
         return null;
     }
     
+    @Override
+	public boolean remove(DefinitionKey key) {
+		mapping.remove(key);
+		return true;
+	}
+    
 }

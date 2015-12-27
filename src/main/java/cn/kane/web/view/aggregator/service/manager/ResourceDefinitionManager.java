@@ -11,6 +11,8 @@ public interface ResourceDefinitionManager<T extends AbstractDefinition> {
     
     boolean edit(T definition) ;
     
+    boolean remove(DefinitionKey key) ;
+    
     T get(DefinitionKey key) ;
     
     /**

@@ -6,12 +6,21 @@
 	http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-3.0.xsd
 	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd" default-autowire="byName">
 	<!-- ol -->	
-	<bean id="olRequirementManageService" class="cn.kane.web.view.integrate.service.RequirementManageServiceMemImpl"/>
-	<bean id="olChangesManageService" class="cn.kane.web.view.integrate.service.ChangesManageServiceMemImpl"/>
-	<!-- mock-synchronizer -->
-	<bean id="mockChangesSynchronizeService" class="cn.kane.web.view.integrate.service.MockChangesSynchronizeService"/>
-	<!-- push -->
-	<bean id="changesPushService" class="cn.kane.web.view.integrate.service.ChangesPushServiceImpl"/>
-	<!-- publish -->
-	<bean id="changesPublishService" class="cn.kane.web.view.integrate.service.ChangesPublishServiceImpl"/>
+	<bean id="newState" class="cn.kane.web.view.integrate.state.NewState"/>
+	<bean id="commitedState" class="cn.kane.web.view.integrate.state.CommitedState"/>
+	<bean id="publishedState" class="cn.kane.web.view.integrate.state.PublishedState"/>
+	<bean id="rollbackedState" class="cn.kane.web.view.integrate.state.RollbackedState"/>
+	<bean id="disabledState" class="cn.kane.web.view.integrate.state.DisabledState"/>
+	<!-- facade -->
+	<bean id="stateFacade" class="cn.kane.web.view.integrate.state.StateFacade">
+		<property name="stateMapping">
+			<map>
+				<entry key="NEW" value-ref="newState"/>
+				<entry key="COMMITED" value-ref="commitedState"/>
+				<entry key="PUBLISHED" value-ref="publishedState"/>
+				<entry key="ROLLBACKED" value-ref="rollbackedState"/>
+				<entry key="DISABLED" value-ref="disabledState"/>
+			</map>
+		</property>
+	</bean>
 </beans>

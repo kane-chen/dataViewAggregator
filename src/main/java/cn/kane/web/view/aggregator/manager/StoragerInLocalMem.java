@@ -34,6 +34,12 @@ public class StoragerInLocalMem implements Storager {
 	}
 
 	@Override
+	public boolean remove(DefinitionKey key) {
+		store.remove(key) ;
+		return true;
+	}
+	
+	@Override
 	public AbstractDefinition get(DefinitionKey key) {
 		return getStore().get(key);
 	}
@@ -166,5 +172,5 @@ public class StoragerInLocalMem implements Storager {
         result = new String(bytes);
         return result;
 	}
-	
+
 }

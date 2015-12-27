@@ -1,6 +1,9 @@
 package cn.kane.web.view.aggregator.manager;
 
 import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import cn.kane.web.view.aggregator.pojo.definition.AbstractDefinition;
 import cn.kane.web.view.aggregator.pojo.definition.DefinitionKey;
@@ -9,38 +12,19 @@ import cn.kane.web.view.aggregator.service.manager.ResourceDefinitionManager;
 import cn.kane.web.view.aggregator.service.manager.StringResourceDefinitionManager;
 import cn.kane.web.view.aggregator.service.manager.WidgetDefinitionManager;
 
-@SuppressWarnings({ "unchecked", "rawtypes" })
 public class ResourceDefinitionManagerFacade implements	ResourceDefinitionManager<AbstractDefinition> {
 
+	@Autowired
 	private StringResourceDefinitionManager stringResourceDefinitionManager;
+	@Autowired
 	private WidgetDefinitionManager widgetDefinitionManager;
+	@Autowired
 	private PageDefinitionManager pageDefinitionManager;
 
-	private ResourceDefinitionManager choose(DefinitionKey key) {
-		switch (key.getType()) {
-		case "string":
-			return stringResourceDefinitionManager;
-		case "dataReadService":
-			return stringResourceDefinitionManager;
-		case "css":
-			return stringResourceDefinitionManager;
-		case "js":
-			return stringResourceDefinitionManager;
-		case "dataTemplate":
-			return stringResourceDefinitionManager;
-		case "viewTemplate":
-			return stringResourceDefinitionManager;
-		case "layout":
-			return stringResourceDefinitionManager;
-		case "sys":
-			return stringResourceDefinitionManager;
-		case "widget":
-			return widgetDefinitionManager;
-		case "page":
-			return pageDefinitionManager;
-		default:
-			return null;
-		}
+	private Map<String,ResourceDefinitionManager<AbstractDefinition>> managerMapping ;
+	
+	private ResourceDefinitionManager<AbstractDefinition> choose(DefinitionKey key) {
+		return managerMapping.get(key.getType()) ;
 	}
 
 	@Override
@@ -59,35 +43,21 @@ public class ResourceDefinitionManagerFacade implements	ResourceDefinitionManage
 	}
 
 	@Override
+	public boolean remove(DefinitionKey key) {
+		return choose(key).remove(key);
+	}
+
+	@Override
 	public List<AbstractDefinition> list(DefinitionKey fromKey,	DefinitionKey toKey) {
 		return choose(fromKey).list(fromKey, toKey);
 	}
 	
-
-	public StringResourceDefinitionManager getStringResourceDefinitionManager() {
-		return stringResourceDefinitionManager;
+	public Map<String,ResourceDefinitionManager<AbstractDefinition>> getManagerMapping() {
+		return managerMapping;
 	}
 
-	public void setStringResourceDefinitionManager(
-			StringResourceDefinitionManager stringResourceDefinitionManager) {
-		this.stringResourceDefinitionManager = stringResourceDefinitionManager;
-	}
-
-	public WidgetDefinitionManager getWidgetDefinitionManager() {
-		return widgetDefinitionManager;
-	}
-
-	public void setWidgetDefinitionManager(
-			WidgetDefinitionManager widgetDefinitionManager) {
-		this.widgetDefinitionManager = widgetDefinitionManager;
-	}
-
-	public PageDefinitionManager getPageDefinitionManager() {
-		return pageDefinitionManager;
-	}
-
-	public void setPageDefinitionManager(PageDefinitionManager pageDefinitionManager) {
-		this.pageDefinitionManager = pageDefinitionManager;
+	public void setManagerMapping(Map<String,ResourceDefinitionManager<AbstractDefinition>> managerMapping) {
+		this.managerMapping = managerMapping;
 	}
 
 }
