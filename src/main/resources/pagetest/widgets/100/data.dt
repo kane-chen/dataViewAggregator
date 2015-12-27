@@ -1,2 +1,0 @@
-#data($defKeyTool.formatStr('dataReadService','100','1'),$params,'futureData100')
-#future($defKeyTool.formatStr('dataReadService','100','1'),'futureRespData100')

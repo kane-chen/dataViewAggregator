@@ -1,3 +1,0 @@
-#macro( sayhi $name )
-  ccccccccccccc,$name
-#end

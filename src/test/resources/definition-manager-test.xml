@@ -1,0 +1,36 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:lang="http://www.springframework.org/schema/lang"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+	http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-3.0.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd" default-autowire="byName">
+	
+	<!-- storage -->
+	<bean id="storager" class="cn.kane.dynamicview.storage.StoragerDefinitionMock"/>
+	
+	<!-- definition-manager -->
+	<bean id="templateDefinitionManager" class="cn.kane.dynamicview.definition.manager.BaseTemplateDefinitionManager"/>
+	<bean id="widgetDefinitionManager" class="cn.kane.dynamicview.definition.manager.BaseWidgetDefinitionManager"/>
+	<bean id="pageDefinitionManager" class="cn.kane.dynamicview.definition.manager.BasePageDefinitionManager"/>
+	
+	<!-- facade -->
+	<bean id="resourceDefinitionManagerFacade" class="cn.kane.dynamicview.definition.manager.ResourceDefinitionManagerFacade">
+		<property name="managerMapping">
+			<map>
+				<entry key="string" value-ref="templateDefinitionManager"/>
+				<entry key="css" value-ref="templateDefinitionManager"/>
+				<entry key="js" value-ref="templateDefinitionManager"/>
+				<entry key="dataReadService" value-ref="templateDefinitionManager"/>
+				<entry key="dataTemplate" value-ref="templateDefinitionManager"/>
+				<entry key="viewTemplate" value-ref="templateDefinitionManager"/>
+				<entry key="layout" value-ref="templateDefinitionManager"/>
+				<entry key="sys" value-ref="templateDefinitionManager"/>
+				<entry key="widget" value-ref="widgetDefinitionManager"/>
+				<entry key="page" value-ref="pageDefinitionManager"/>
+			</map>
+		</property>
+	</bean>	
+	
+	
+</beans>

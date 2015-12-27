@@ -1,0 +1,29 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:lang="http://www.springframework.org/schema/lang"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+	http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-3.0.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd" default-autowire="byName">
+	
+	<!-- builder -->
+	<bean id="widgetBuilder" class="cn.kane.dynamicview.resource.loader.builder.WidgetBuilder"/>
+	<!-- cacher -->
+	<bean id="widgetCacher" class="cn.kane.dynamicview.resource.loader.cache.GuavaResourceCacher" init-method="init">
+		<property name="cacheName" value="widget-cache"/>
+		<property name="maxSize" value="500"/>
+	</bean>
+	<bean id="widgetComparator" class="cn.kane.dynamicview.resource.loader.compare.WidgetComparator"/>
+	<!-- synchronizer -->
+	<bean id="widgetSynchronizer" class="cn.kane.dynamicview.resource.loader.synchronize.ScheduledResourceSynchronizer"  init-method="init">
+		<property name="resourceBuilder" ref="widgetBuilder"/>
+		<property name="resourceCacher" ref="widgetCacher"/>
+		<property name="resourceComparator" ref="widgetComparator"/>
+		<property name="schedulePeriodSeconds" value="60"/>
+	</bean>
+	<!-- loader -->
+	<bean id="widgetLoader" class="cn.kane.dynamicview.resource.loader.CachedWidgetLoader">
+		<property name="resourceSynchronzier" ref="widgetSynchronizer"/>
+	</bean>
+	
+</beans>

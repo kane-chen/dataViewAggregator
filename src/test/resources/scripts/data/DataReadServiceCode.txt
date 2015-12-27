@@ -1,0 +1,12 @@
+package cn.kane.dataview.service.test.resource.loader;
+
+import cn.kane.dynamicview.resource.service.DataReadService;
+
+public class TestDataReadService implements DataReadService{
+
+    @Override
+    public Object getData(Object param) {
+        return "HELLO-WORLD";
+    }
+
+}

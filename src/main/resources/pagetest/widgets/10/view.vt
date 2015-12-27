@@ -1,8 +1,0 @@
-#include($defKeyTool.formatStr('css','10','1'))
-
-<p class="10 strong">
-	${futureData10}
-	<br>
-	${futureRespData10}
-</p>
-

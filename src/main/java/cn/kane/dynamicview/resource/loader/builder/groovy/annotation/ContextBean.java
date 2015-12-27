@@ -1,0 +1,22 @@
+package cn.kane.dynamicview.resource.loader.builder.groovy.annotation;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+@Documented
+public @interface ContextBean {
+
+	/**
+	 * bean-name in container
+	 * 
+	 * @return
+	 */
+	String beanName();
+
+}

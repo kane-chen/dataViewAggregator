@@ -1,3 +1,0 @@
-#foreach($resource in $resources)
-	#parse($resource)
-#end
